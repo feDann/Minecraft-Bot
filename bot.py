@@ -29,7 +29,7 @@ def out_log():
     while decodeLine:
         try:
             line = q.get_nowait()
-        except:
+        except Empty:
             decodeLine=False
         else:
             out.append(line.decode().replace('[Server thread/INFO]',''))
@@ -95,17 +95,21 @@ def stop_server(message):
         if message.from_user.username in config['whitelist']:
             if process is None:
                 bot.reply_to(message, "Server is not yet started! Use /start to start the server")
-            else:           
-                process.stdin.write(b'stop\n')
-                process.stdin.flush()
-                process.communicate()
-                process.terminate()                    
+            else:
+                if not process.stdin.closed:           
+                    process.stdin.write(b'stop\n')
+                    process.stdin.flush()
+                    process.communicate()
+                    process.terminate()
+                else:
+                    process.terminate()
                 q = None
                 t = None
                 process = None
                 bot.reply_to(message, 'Server Stopped, type /start to start the server')
     except Exception  as e:
-        print('Error in stop ' + str(e)) 
+        print('Error in stop ' + str(e))
+        bot.reply_to(message, 'Unable to stop the server. Try again /stop') 
 
 @bot.message_handler(commands=['help_minecraft'])
 def help_command(message):
@@ -116,10 +120,12 @@ def help_command(message):
         if message.from_user.username in config['whitelist']:
             if process is None:
                 bot.reply_to(message, "Server is not yet started! Use /start to start the server")
-            else:           
+            elif not process.stdin.closed :           
                 process.stdin.write(b'help\n')
                 process.stdin.flush()
                 bot.reply_to(message, 'Help done, press /info to se result')
+            else:
+                bot.reply_to(message, 'Unable to use this command right now, /stop the server and /start again')
     except Exception  as e:
         print('Error in help ' + str(e))  
 
@@ -137,16 +143,28 @@ def exec_command(message):
                 command = message.text.replace('/command ' , '')
                 if 'stop' in command:
                     bot.reply_to(message,'To stop the server use /stop command!')
-                else:
+                elif not process.stdin.closed :
                     command += "\n"
                     process.stdin.write(command.encode())
                     process.stdin.flush()
                     bot.reply_to(message, 'Command executed!Type /info to see the output')
-                
+                else:
+                    bot.reply_to(message, 'Unable to use this command right now, /stop the server and /start again')
     except Exception  as e:
         print('Error in command ' + str(e))   
         
 
+
+@bot.message_handler(commands=['fetch_whitelist'])
+def fetch_whitelist(message):
+    global config
+    try:
+        if message.from_user.username in config['whitelist']:
+            with open('config.json') as configFile:
+                config = json.load(configFile)
+            bot.reply_to(message, 'Whitelist updated')
+    except Exception  as e:
+        print('Error during fetch whitelist command ' + str(e))
 
 
 
