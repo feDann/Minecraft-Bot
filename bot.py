@@ -13,7 +13,10 @@ process = None
 q = None
 t = None
 
-with open('config.json') as configFile:
+cwd =  os.getcwd()
+config_path = os.path.join(cwd,'config.json')
+
+with open(config_path) as configFile:
     config = json.load(configFile)
 
 
@@ -160,7 +163,7 @@ def fetch_whitelist(message):
     global config
     try:
         if message.from_user.username in config['whitelist']:
-            with open('config.json') as configFile:
+            with open(config_path) as configFile:
                 config = json.load(configFile)
             bot.reply_to(message, 'Whitelist updated')
     except Exception  as e:
