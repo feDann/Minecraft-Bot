@@ -7,13 +7,11 @@ from threading import Thread , Lock
 from queue import Queue, Empty
 
 
-lock = Lock()
-
 process = None
 q = None
 t = None
 
-cwd =  os.getcwd()
+cwd =  os.path.dirname(os.path.realpath(__file__))
 config_path = os.path.join(cwd,'config.json')
 
 with open(config_path) as configFile:
