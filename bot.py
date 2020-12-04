@@ -58,7 +58,7 @@ def start_server(message):
                 t.daemon = True
                 t.start()            
             else:
-                bot.reply_to(message, "the server is already up, type /restart to restart the server , /info to view the stdout or /stop to stop the server")
+                bot.reply_to(message, "the server is already up tyoe  /output to view the stdout or /stop to stop the server")
     except Exception  as e:
         print('Error in start ' + str(e)) 
 
@@ -126,7 +126,7 @@ def exec_command(message):
                     command += "\n"
                     process.stdin.write(command.encode())
                     process.stdin.flush()
-                    bot.reply_to(message, 'Command executed!Type /info to see the output')
+                    bot.reply_to(message, 'Command executed!Type /output to see the output')
                 else:
                     bot.reply_to(message, 'Unable to use this command right now, /stop the server and /start again')
     except Exception  as e:
@@ -134,16 +134,16 @@ def exec_command(message):
         
 
 
-@bot.message_handler(commands=['fetch_whitelist'])
+@bot.message_handler(commands=['reload_config'])
 def fetch_whitelist(message):
     global config
     try:
         if message.from_user.username in config['whitelist']:
             with open(config_path) as configFile:
                 config = json.load(configFile)
-            bot.reply_to(message, 'Whitelist updated')
+            bot.reply_to(message, 'Config File reloaded')
     except Exception  as e:
-        print('Error during fetch whitelist command ' + str(e))
+        print('Error during reload config command ' + str(e))
 
 
 
