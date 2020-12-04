@@ -109,7 +109,7 @@ def info_server(message):
 
 
 
-@bot.message_handler(commands=['command'])
+@bot.message_handler(commands=['command' , 'c'])
 def exec_command(message):
     global process
     global t
