@@ -1,6 +1,6 @@
 # Minecraft Server Bot
 
-Minecraft Server Bot is a python telegram bot that allow you to control your minecraf server remotely
+Minecraft Server Bot is a python telegram bot that allow you to control your minecraft server remotely
 
 <p align=center width=50%>
     <img src = https://i.imgur.com/MHvDRtN.jpeg/ width=70%>
@@ -11,7 +11,7 @@ Minecraft Server Bot is a python telegram bot that allow you to control your min
 
 This project use python3. First of all install all the dependencies in the requirements file using the command: ` pip3 install requirements`,
 then rename the `config-sample.json` file in `config.json`.
-In the config.json file add in:
+In the config.json file configure the fields as:
 
 -   **whitelist** : list of telegram username that are allowed to use the bot
 -   **server-directory** : directory of the minecraft server
